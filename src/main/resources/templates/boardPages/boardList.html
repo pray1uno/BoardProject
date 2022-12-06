@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board_list</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+<div class="container">
+    <table class="table table-hover">
+        <tr>
+            <th>번호</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>비밀번호</th>
+            <th>내용</th>
+            <th>작성시간</th>
+            <th>수정시간</th>
+            <th>조회수</th>
+            <th>상세조회</th>
+        </tr>
+        <tr th:each="list: ${boardList}">
+            <td th:text="${list.id}"></td>
+            <td th:text="${list.boardWriter}"></td>
+            <td th:text="${list.boardTitle}"></td>
+            <td th:text="${list.boardPass}"></td>
+            <td th:text="${list.boardContents}"></td>
+            <td th:text="*{#temporals.format(list.boardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="*{#temporals.format(list.boardUpdatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${list.boardHits}"></td>
+            <td>
+                <a th:href="@{|/board/${list.id}|}">상세조회</a>
+            </td>
+        </tr>
+    </table>
+    <div class="container">
+        <button onclick="toIndex()">홈 이동</button>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    const toIndex = () => {
+        location.href = "/";
+
+    }
+</script>
+</html>

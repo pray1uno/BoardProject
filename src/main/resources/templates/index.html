@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>index</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery.js}"></script>
 </head>
 <body>
-
+<div class="container">
+    <button class="btn" onclick="newSave()">신규 글 작성</button>
+    <button class="btn" onclick="boardList()">글 목록</button>
+</div>
 </body>
+<script th:inline="javascript">
+    const newSave = () => {
+        location.href = "/board/save";
+    }
+
+    const boardList = () => {
+        location.href = "/board/";
+    }
+</script>
 </html>

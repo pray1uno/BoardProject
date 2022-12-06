@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board_update</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+<div class="container">
+    <form action="/board/update/" method="post" name="updateForm">
+
+        <input type="hidden" name="id" id="id" th:value="${update.id}">
+        <input type="hidden" name="boardHits" id="boardHits" th:value="${update.boardHits}">
+
+        <label for="boardWriter">작성자</label> <br>
+        <input type="text" name="boardWriter" id="boardWriter" class="form-control" th:value="${update.boardWriter}">
+        <br>
+
+        <label for="boardTitle">제목</label> <br>
+        <input type="text" name="boardTitle" id="boardTitle" class="form-control" th:value="${update.boardTitle}"> <br>
+
+        <label for="boardPass">비밀번호</label> <br>
+        <input type="text" name="boardPass" id="boardPass" class="form-control" th:value="${update.boardPass}"> <br>
+
+        <label for="boardContents">내용</label> <br>
+        <textarea name="boardContents" id="boardContents" cols="30" rows="10" class="form-control"
+                  th:value="${update.boardContents}"></textarea> <br>
+
+        <div class="container">
+            <input type="button" value="수정완료" onclick="updateWriting()" class="btn btn">
+        </div>
+    </form>
+</div>
+</body>
+<script th:inline="javascript">
+    const updateWriting = () => {
+        const db = [[${update.boardPass}]];
+        const input = document.getElementById("boardPass").value;
+
+        if (db == input) {
+            alert("수정 성공");
+            document.updateForm.submit();
+        } else {
+            alert("비밀번호를 확인하세요.");
+        }
+    }
+</script>
+</html>

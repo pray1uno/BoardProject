@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board_detail</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <table class="table table-hover">
+        <tr>
+            <th>번호</th>
+            <td th:text="${findById.id}"></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${findById.boardWriter}"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td th:text="${findById.boardTitle}"></td>
+        </tr>
+        <tr>
+            <th>비밀번호</th>
+            <td th:text="${findById.boardPass}"></td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td th:text="${findById.boardContents}"></td>
+        </tr>
+        <tr>
+            <th>조회수</th>
+            <td th:text="${findById.boardHits}"></td>
+        </tr>
+        <tr>
+            <th>삭제하기</th>
+            <td>
+                <a th:href="@{|/board/delete/${findById.id}|}">삭제(1)</a>
+                <button class="btn btn-primary" id="deleteBT">삭제(2/검증)</button>
+            </td>
+        </tr>
+        <tr>
+            <th>수정하기</th>
+            <td>
+                <button class="btn btn-success" id="updateBT">수정(1/검증)</button>
+            </td>
+        </tr>
+    </table>
+    <span id="inner"></span>
+    <div id="checkBT"></div>
+</div>
+</body>
+<script th:inline="javascript">
+    $('#deleteBT').click(function () {
+        let box = "";
+        let BT = "";
+        box += "비밀번호를 입력해 주세요.<br>";
+        box += '<input type="text" name="boardPass" class="form-control" id="boardPass">';
+
+        BT += '<button type="button" class="btn btn-secondary" onclick="passCheck()">확인</button>';
+
+        $('#inner').html(box);
+        $('#checkBT').html(BT);
+    })
+
+    const passCheck = () => {
+        const id = [[${findById.id}]];
+        const input = document.getElementById("boardPass").value;
+        const db = [[${findById.boardPass}]];
+
+        if (input == db) {
+            location.href = "/board/delete/" + id;
+        } else {
+            alert("비밀번호가 틀립니다.");
+        }
+    }
+
+    $('#updateBT').click(function () {
+        let box = "";
+        let BT = "";
+        box += "비밀번호를 입력해 주세요.<br>";
+        box += '<input type="text" name="boardPass" class="form-control" id="boardPass">';
+
+        BT += '<button type="button" class="btn btn-secondary" onclick="updateCheck()">확인</button>';
+
+        $('#inner').html(box);
+        $('#checkBT').html(BT);
+    })
+
+    const updateCheck = () => {
+        const data = [[${findById.id}]];
+        const input = document.getElementById("boardPass").value;
+        const db = [[${findById.boardPass}]];
+
+        if (input == db) {
+            location.href = "/board/update/?id=" + data;
+        } else {
+            alert("비밀번호가 틀립니다.");
+        }
+
+    }
+</script>
+</html>

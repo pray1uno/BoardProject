@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board_save</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+    <style>
+        #totalForm {
+            width: 800px;
+        }
+    </style>
+</head>
+<body>
+<th:block th:replace="commonPages/header :: header"></th:block>
+
+<div class="container" id="totalForm">
+    <form action="/board/save" method="post" name="saveForm">
+        <label for="boardWriter">작성자</label> <br>
+        <input type="text" name="boardWriter" id="boardWriter" class="form-control"> <br>
+
+        <label for="boardTitle">제목</label> <br>
+        <input type="text" name="boardTitle" id="boardTitle" class="form-control"> <br>
+
+        <label for="boardPass">비밀번호</label> <br>
+        <input type="text" name="boardPass" id="boardPass" class="form-control"> <br>
+
+        <label for="boardContents">내용</label> <br>
+        <textarea name="boardContents" id="boardContents" cols="30" rows="10" class="form-control"></textarea> <br>
+
+        <div class="container">
+            <input type="button" value="작성완료" onclick="newWriting()" class="btn btn">
+        </div>
+    </form>
+</div>
+</body>
+<script th:inline="javascript">
+    const newWriting = () => {
+        document.saveForm.submit();
+    }
+</script>
+</html>
