@@ -15,7 +15,7 @@
 <th:block th:replace="commonPages/header :: header"></th:block>
 
 <div class="container" id="totalForm">
-    <form action="/board/save" method="post" name="saveForm">
+    <form action="/board/save" method="post" name="saveForm" enctype="multipart/form-data">
         <label for="boardWriter">작성자</label> <br>
         <input type="text" name="boardWriter" id="boardWriter" class="form-control"> <br>
 
@@ -27,6 +27,8 @@
 
         <label for="boardContents">내용</label> <br>
         <textarea name="boardContents" id="boardContents" cols="30" rows="10" class="form-control"></textarea> <br>
+
+        <input type="file" name="boardFile" class="form-control">
 
         <div class="container">
             <input type="button" value="작성완료" onclick="newWriting()" class="btn btn">

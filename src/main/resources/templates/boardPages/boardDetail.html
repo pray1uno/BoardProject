@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/jquery.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -34,6 +35,10 @@
             <th>조회수</th>
             <td th:text="${findById.boardHits}"></td>
         </tr>
+        <tr th:if="${findById.fileAttached == 1}">
+            <th>이미지</th>
+            <td><img th:src="@{|/upload/${findById.storedFileName}}"></td>
+        </tr>
         <tr>
             <th>삭제하기</th>
             <td>
@@ -48,11 +53,49 @@
             </td>
         </tr>
     </table>
+    <div class="container">
+        <button class="btn btn-warning" onclick="req('update')">수정</button>
+        <button class="btn btn-danger" onclick="req('delete')">삭제</button>
+    </div>
+<!--    th:onclick == 매개변수로 모델 값을 줄 때 사용 -->
     <span id="inner"></span>
     <div id="checkBT"></div>
 </div>
 </body>
 <script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/board/";
+
+    }
+    const req = (value) => {
+        console.log("value 값", value);
+        const passCheckArea = document.getElementById("pass-check");
+        passCheckArea.innerHTML = " <input type=\"text\" id=\"password\" placeholder=\"password\">\n" +
+            "    <button class=\"btn btn-outline-dark\" onclick=\"passCheck('" + value + "')\">확인</button>";
+
+
+    }
+
+    const passCheck = (value) => {
+        console.log(value);
+        const password = document.getElementById("password").value;
+        const passDB = [[${findById.boardPass}]];
+        const id = [[${findById.id}]];
+        if (password == passDB) {
+            if (value == "update") {
+                location.href = "/board/update/" + id;
+
+            } else if (value == "delete") {
+                location.href = "/board/delete/" + id;
+
+            }
+        } else {
+            alert("비밀번호 틀림!!");
+        }
+
+
+    }
+    // ---------------------------------- 수업 전 작업
     $('#deleteBT').click(function () {
         let box = "";
         let BT = "";
