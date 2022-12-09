@@ -10,6 +10,9 @@
 <div class="container">
     <button class="btn" onclick="newSave()">신규 글 작성</button>
     <button class="btn" onclick="boardList()">글 목록</button>
+    <button class="btn" onclick="pagingList()">페이지 목록</button>
+<!--    1페이지 14번글 /board/14/1
+                     /board/14?page=1-->
 </div>
 </body>
 <script th:inline="javascript">
@@ -19,6 +22,11 @@
 
     const boardList = () => {
         location.href = "/board/";
+    }
+
+    const pagingList = () => {
+        location.href = "/board";
+
     }
 </script>
 </html>

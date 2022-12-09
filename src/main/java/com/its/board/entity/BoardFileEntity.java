@@ -20,7 +20,7 @@ public class BoardFileEntity extends BaseEntity {
     @Column
     private String storedFileName;
 
-    // 자식 엔티이에서는 자기를 기준으로 부모 엔티이와 어떤 관계인지
+    // 자식 엔티티에서는 자기를 기준으로 부모 엔티티와 어떤 관계인지
     // 게시글 : 첨부파일 = 1 : N
     // 첨부파일 : 게시글 = N : 1 기준이 누구냐에 따라
     @ManyToOne(fetch = FetchType.LAZY)

@@ -7,6 +7,7 @@
     <script th:src="@{/js/jquery.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script th:src="@{/js/axios.min.js}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -37,7 +38,10 @@
         </tr>
         <tr th:if="${findById.fileAttached == 1}">
             <th>이미지</th>
-            <td><img th:src="@{|/upload/${findById.storedFileName}}"></td>
+            <!--            <td><img th:src="@{|/upload/${findById.storedFileName}}"></td> // 파일이 1개일때 -->
+            <td th:each="fileName: ${findById.storedFileName}">
+                <img th:src="@{|/upload/${fileName}}" alt="" width="200" height="200">
+            </td>
         </tr>
         <tr>
             <th>삭제하기</th>
@@ -57,23 +61,150 @@
         <button class="btn btn-warning" onclick="req('update')">수정</button>
         <button class="btn btn-danger" onclick="req('delete')">삭제</button>
     </div>
-<!--    th:onclick == 매개변수로 모델 값을 줄 때 사용 -->
+    <!--    th:onclick == 매개변수로 모델 값을 줄 때 사용 -->
     <span id="inner"></span>
     <div id="checkBT"></div>
 </div>
+
+<div class="container">
+    <div class="input-group">
+        <div class="container">
+            <label for="commentWriter">작성자</label>
+            <input type="text" name="commentWriter" id="commentWriter" class="form-control">
+        </div>
+        <div class="container">
+            <label for="commentContents">내용</label>
+            <textarea name="commentContents" id="commentContents" cols="30" rows="10" class="form-control"
+                      style="height: 100px;"></textarea>
+        </div>
+        <div class="container">
+            <button class="btn btn-primary" onclick="newCommentWrite()">작성</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="commentForm">
+    <div th:if="${commentList == 'empty'}">
+        <p>작성된 댓글이 없습니다.</p>
+    </div>
+    <div th:unless="${commentList == 'empty'}">
+        <table class="table">
+            <tr>
+                <th>댓글번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성시간</th>
+            </tr>
+            <tr th:each="comment : ${commentList}">
+                <td th:text="${comment.id}"></td>
+                <td th:text="${comment.commentWriter}"></td>
+                <td th:text="${comment.commentContents}"></td>
+                <td th:text="*{#temporals.format(comment.commentCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
 </body>
 <script th:inline="javascript">
-    const listReq = () => {
-        location.href = "/board/";
+    const newCommentWrite = () => {
+        const writer = document.getElementById("commentWriter").value;
+        const contents = document.getElementById("commentContents").value;
+        const boardId = [[${findById.id}]];
+
+        axios({
+            method: "post",
+            url: "/comment/save",
+            data: {
+                commentWriter: writer,
+                commentContents: contents,
+                boardId: boardId
+            }
+        }).then(res => {
+            console.log(res);
+            console.log(res.data);
+            const commentList = res.data;
+            console.log("commentList", commentList);
+            let output = "<div class='container'>";
+            output += "<table class='table table-hover mt-5'>";
+            output += "<tr><th>번호</th>"
+            output += "<th>작성자</th>";
+            output += "<th>내용</th>";
+            for (let i in commentList) {
+                output += "<tr>";
+                output += "<td>" + commentList[i].id + "</td>";
+                output += "<td>" + commentList[i].commentWriter + "</td>";
+                output += "<td>" + commentList[i].commentContents + "</td>";
+                output += "<td>" + moment(commentList[i].commentCreatedDate).format("YYYY-MM-DD HH:mm:ss") + "</td>";
+                output += "</tr>";
+            }
+            output += "</table>";
+            output += "</div>";
+
+            document.getElementById('commentForm').innerHTML = output;
+            document.getElementById('commentWriter').value = '';
+            document.getElementById('commentContents').value = '';
+        }).catch(err => {
+            console.log(err);
+        })
 
     }
+
+
+    // const newCommentWrite = () => {
+    //     const writer = document.getElementById("commentWriter").value;
+    //     const contents = document.getElementById("commentContents").value;
+    //     const commentId = [[${findById.id}]];
+    //
+    //     console.log(writer, contents, commentId);
+    //
+    //     $.ajax({
+    //         type: "post",
+    //         url: "/comment/save",
+    //         data: {
+    //             commentWriter: writer,
+    //             commentContents: contents,
+    //             boardId: commentId
+    //         },
+    //         dataType: "json",
+    //         success: function (result) {
+    //             let output = "<div class='container'>";
+    //             output += "<table class='table table-hover mt-5'>";
+    //             output += "<tr><th>번호</th>"
+    //             output += "<th>작성자</th>";
+    //             output += "<th>내용</th>";
+    //             for (let i in result) {
+    //                 output += "<tr>";
+    //                 output += "<td>" + result[i].id + "</td>";
+    //                 output += "<td>" + result[i].commentWriter + "</td>";
+    //                 output += "<td>" + result[i].commentContents + "</td>";
+    //                 output += "<td>" + moment(result[i].commentCreatedDate).format("YYYY-MM-DD HH:mm:ss") + "</td>";
+    //                 output += "</tr>";
+    //             }
+    //             output += "</table>";
+    //             output += "</div>";
+    //
+    //             document.getElementById('commentForm').innerHTML = output;
+    //             document.getElementById('commentWriter').value = '';
+    //             document.getElementById('commentContents').value = '';
+    //         },
+    //         error: function () {
+    //             console.log("힝");
+    //         }
+    //     });
+    //
+    // }
+
+    //
+    // const listReq = () => {
+    //     location.href = "/board/";
+    //
+    // }
+
     const req = (value) => {
         console.log("value 값", value);
         const passCheckArea = document.getElementById("pass-check");
         passCheckArea.innerHTML = " <input type=\"text\" id=\"password\" placeholder=\"password\">\n" +
             "    <button class=\"btn btn-outline-dark\" onclick=\"passCheck('" + value + "')\">확인</button>";
-
-
     }
 
     const passCheck = (value) => {
@@ -93,8 +224,9 @@
             alert("비밀번호 틀림!!");
         }
 
-
     }
+
+
     // ---------------------------------- 수업 전 작업
     $('#deleteBT').click(function () {
         let box = "";
@@ -102,13 +234,13 @@
         box += "비밀번호를 입력해 주세요.<br>";
         box += '<input type="text" name="boardPass" class="form-control" id="boardPass">';
 
-        BT += '<button type="button" class="btn btn-secondary" onclick="passCheck()">확인</button>';
+        BT += '<button type="button" class="btn btn-secondary" onclick="passCheck2()">확인</button>';
 
         $('#inner').html(box);
         $('#checkBT').html(BT);
     })
 
-    const passCheck = () => {
+    const passCheck2 = () => {
         const id = [[${findById.id}]];
         const input = document.getElementById("boardPass").value;
         const db = [[${findById.boardPass}]];
